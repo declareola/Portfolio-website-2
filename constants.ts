@@ -16,7 +16,7 @@ export const PORTFOLIO_DATA: Person[] = [
     id: 'olabode',
     name: 'Olabode Ilesanmi',
     title: 'Technical Executive Assistant & Developer',
-    imageUrl: 'https://drive.google.com/uc?export=view&id=1yw8UHB4_a5muzALZJM1LmWdVEG9aHP65',
+    imageUrl: '/assets/images/Olabode Ilesanmi.png',
     about: "Technical Executive Assistant with 5+ years of experience in executive support, IT operations, and data analytics. Expert in Microsoft 365, Power BI, Google Workspace, and web development (HTML/CSS, React). Proven track record managing C-level executives, automating workflows, and delivering data-driven insights for remote and hybrid teams.",
     resumeUrl: 'https://docs.google.com/document/d/1jkHKWUpL8lPzub4HRS3QkaV97gxJSou5/export?format=pdf',
     coreSkills: [
@@ -128,7 +128,7 @@ export const PORTFOLIO_DATA: Person[] = [
     id: 'aisha',
     name: 'Aishat Kadir',
     title: 'Administrative Assistant',
-    imageUrl: 'https://i.imgur.com/WJ9m521.jpeg',
+    imageUrl: '/assets/images/aishat kadir.png',
     about: "Aishat Kadir is a proactive Virtual Assistant with hands-on remote experience in client coordination, administrative support, and calendar and email management. She is skilled in using Google Workspace, Zoom, Canva, and Microsoft Excel, and has a proven ability to support teams across multiple time zones and streamline workflows. She is dedicated to enhancing business productivity through operational efficiency and seamless virtual support.",
     resumeUrl: '#', // Placeholder URL
     coreSkills: [
