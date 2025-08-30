@@ -24,6 +24,19 @@ export interface Testimonial {
   role: string;
 }
 
+export interface Certification {
+  name: string;
+  issuer: string;
+  date: string;
+}
+
+export interface Education {
+  degree: string;
+  institution: string;
+  date: string;
+  details: string[];
+}
+
 export interface Person {
   id: string;
   name: string;
@@ -32,10 +45,14 @@ export interface Person {
   about: string;
   coreSkills: string[];
   expertise: Skill[];
-  projects: Project[];
+  workExperience: Project[];
+  volunteerActivities: Project[];
   testimonials: Testimonial[];
   connect: SocialLink[];
   resumeUrl?: string;
+  certifications: Certification[];
+  education: Education[];
+  interests: string[];
   theme: {
     color: string;
     shadow: string;

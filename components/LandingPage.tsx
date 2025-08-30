@@ -3,6 +3,8 @@ import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { PORTFOLIO_DATA } from '../constants.ts';
 import { Person } from '../types.ts';
+import { useSound } from '../hooks/useSound.ts';
+import { useCursor } from '../hooks/useCursor.ts';
 
 interface LandingPageProps {
   onSelect: (person: Person) => void;
@@ -26,10 +28,20 @@ const containerVariants = {
 };
 
 const PortfolioCard: React.FC<{ person: Person; onSelect: (person: Person) => void; rotate: { x: number; y: number } }> = ({ person, onSelect, rotate }) => {
+  const { playSound } = useSound();
+  const { setVariant } = useCursor();
+  
   return (
     <motion.div
       layoutId={`card-container-${person.id}`}
-      onClick={() => onSelect(person)}
+      onClick={() => {
+        playSound('click');
+        setVariant('default');
+        onSelect(person);
+      }}
+      onHoverStart={() => playSound('hover')}
+      onMouseEnter={() => setVariant('hover')}
+      onMouseLeave={() => setVariant('default')}
       className="relative flex flex-col items-center justify-center p-8 space-y-4 cursor-pointer w-full max-w-sm md:max-w-md lg:max-w-lg group"
       // FIX: Moved rotateX and rotateY from the style prop to the animate prop to comply with recent framer-motion API changes.
       animate={{ rotateX: rotate.x, rotateY: rotate.y }}
@@ -48,7 +60,7 @@ const PortfolioCard: React.FC<{ person: Person; onSelect: (person: Person) => vo
         <img
           src={person.imageUrl}
           alt={person.name}
-          className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover"
+          className="w-48 h-48 md:w-64 md:h-64 rounded-full object-contain"
         />
       </motion.div>
       <motion.div layoutId={`text-container-${person.id}`} className="text-center" style={{ transform: 'translateZ(40px)' }}>

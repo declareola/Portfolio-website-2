@@ -1,10 +1,14 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { Person, Skill } from '../types.ts';
 import { FiArrowLeft, FiCheckCircle, FiDownload } from 'react-icons/fi';
 import { FaQuoteLeft } from 'react-icons/fa';
 import SkillDetailModal from './SkillDetailModal.tsx';
+import { useSound } from '../hooks/useSound.ts';
+import WhyHireMe from './WhyHireMe.tsx';
+import { useProactiveTrigger } from '../hooks/useProactiveTrigger.ts';
+import { useCursor } from '../hooks/useCursor.ts';
 
 interface PortfolioDetailProps {
   person: Person;
@@ -37,6 +41,61 @@ const itemVariants: Variants = {
 
 const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const { playSound } = useSound();
+  const { setVariant } = useCursor();
+
+  const expertiseRef = useRef<HTMLDivElement>(null);
+  const workExperienceRef = useRef<HTMLDivElement>(null);
+
+  useProactiveTrigger(
+    expertiseRef,
+    `I see you're exploring my skills. I'd be happy to elaborate on how I've applied any of these in my projects. Just ask!`,
+    10000
+  );
+
+  useProactiveTrigger(
+    workExperienceRef,
+    `These are some of my key projects. Feel free to ask for more details on the challenges, my specific role, or the outcomes of any of them.`,
+    12000
+  );
+
+  const handleBackClick = () => {
+    playSound('click');
+    setVariant('default');
+    onBack();
+  };
+
+  const handleSkillClick = (skill: Skill) => {
+    playSound('open');
+    setVariant('default');
+    setSelectedSkill(skill);
+  };
+
+  const handleCloseModal = () => {
+    playSound('close');
+    setSelectedSkill(null);
+  };
+
+  const skillItemVariants: Variants = {
+    initial: {},
+    hover: {
+      scale: 1.08,
+      y: -4,
+      transition: { duration: 0.2 }
+    }
+  };
+
+  const skillIconVariants: Variants = {
+    initial: {
+      scale: 1,
+      rotate: 0,
+    },
+    hover: {
+      scale: 1.2,
+      rotate: -8,
+      transition: { type: 'spring', stiffness: 400, damping: 10 }
+    }
+  };
 
   return (
     <>
@@ -49,10 +108,12 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
       className={`relative w-full max-w-5xl bg-black/30 backdrop-blur-md rounded-2xl border border-${person.theme.color}/50 p-6 md:p-10 ${person.theme.shadow} max-h-[90vh] flex flex-col`}
     >
       <motion.button 
-        onClick={onBack} 
+        onClick={handleBackClick} 
         className={`absolute top-4 left-4 text-gray-400 hover:text-${person.theme.color} transition-colors z-10 p-2 rounded-full hover:bg-${person.theme.color}/20`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
+        onMouseEnter={() => setVariant('hover')}
+        onMouseLeave={() => setVariant('default')}
         aria-label="Go back"
       >
         <FiArrowLeft size={24} />
@@ -68,7 +129,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
             <img
               src={person.imageUrl}
               alt={person.name}
-              className="w-40 h-40 rounded-full object-cover"
+              className="w-40 h-40 rounded-full object-contain"
             />
           </motion.div>
           <motion.div layoutId={`text-container-${person.id}`} className="flex-shrink-0">
@@ -78,13 +139,15 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
           <motion.p variants={itemVariants} className="text-gray-300 mt-4 text-sm leading-relaxed">
             {person.about}
           </motion.p>
-           {person.resumeUrl && (
+           {person.resumeUrl && person.resumeUrl !== '#' && (
             <motion.a
                 variants={itemVariants}
                 href={person.resumeUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                download
+                download="Olabode_Ilesanmi_Resume.html"
+                onClick={() => playSound('click')}
+                onHoverStart={() => playSound('hover')}
+                onMouseEnter={() => setVariant('hover')}
+                onMouseLeave={() => setVariant('default')}
                 className={`inline-flex items-center justify-center gap-2 px-6 py-3 mt-6 text-white bg-${person.theme.color}/80 rounded-full font-semibold transition-colors hover:bg-${person.theme.color}`}
                 whileHover={{ scale: 1.05, y: -2, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.95 }}
@@ -102,6 +165,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
               {person.coreSkills.map(skill => (
                  <motion.div
                   key={skill}
+                  onHoverStart={() => playSound('hover')}
                   className={`flex items-center gap-2 p-3 bg-gray-800/50 border border-${person.theme.color}/50 rounded-lg shadow-sm`}
                   whileHover={{
                     scale: 1.05,
@@ -124,7 +188,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
         {/* Right Side */}
         <div className="lg:w-2/3 space-y-8">
           {/* Expertise */}
-          <motion.div variants={itemVariants}>
+          <motion.div variants={itemVariants} ref={expertiseRef}>
             <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
               EXPERTISE
             </h3>
@@ -133,55 +197,150 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                 <motion.div 
                   key={skill.name} 
                   className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg cursor-pointer"
-                  whileHover={{ scale: 1.08, y: -4, transition: { duration: 0.2 } }}
-                  onClick={() => setSelectedSkill(skill)}
+                  variants={skillItemVariants}
+                  initial="initial"
+                  whileHover="hover"
+                  onHoverStart={() => playSound('hover')}
+                  onMouseEnter={() => setVariant('hover')}
+                  onMouseLeave={() => setVariant('default')}
+                  onClick={() => handleSkillClick(skill)}
                 >
-                  <skill.icon className={`text-${person.theme.color}`} size={20} />
+                  <motion.div variants={skillIconVariants}>
+                    <skill.icon className={`text-${person.theme.color}`} size={20} />
+                  </motion.div>
                   <span className="text-gray-200">{skill.name}</span>
                 </motion.div>
               ))}
             </div>
           </motion.div>
           
-          {/* Projects */}
-          <motion.div variants={itemVariants}>
-            <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
-              PROJECTS
-            </h3>
-            <div className="space-y-4">
-              {person.projects.map((project) => (
-                <motion.div 
-                  key={project.title} 
-                  className="p-4 bg-gray-800/50 rounded-lg transition-colors hover:bg-gray-800/80"
-                  whileHover={{ y: -2 }}
-                >
-                  <h4 className="font-bold text-white">{project.title}</h4>
-                  <p className="text-sm text-gray-300 my-1">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {project.tech.map(t => <span key={t} className={`text-xs bg-${person.theme.color}/10 text-${person.theme.color} px-2 py-1 rounded-full`}>{t}</span>)}
+          {/* Work Experience */}
+          {person.workExperience.length > 0 && (
+            <motion.div variants={itemVariants} ref={workExperienceRef}>
+              <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
+                WORK EXPERIENCE
+              </h3>
+              <div className="space-y-4">
+                {person.workExperience.map((project) => (
+                  <motion.div 
+                    key={project.title} 
+                    className="p-4 bg-gray-800/50 rounded-lg transition-colors hover:bg-gray-800/80"
+                    whileHover={{ y: -2 }}
+                  >
+                    <h4 className="font-bold text-white">{project.title}</h4>
+                    <p className="text-sm text-gray-300 my-1">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {project.tech.map(t => <span key={t} className={`text-xs bg-${person.theme.color}/10 text-${person.theme.color} px-2 py-1 rounded-full`}>{t}</span>)}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Volunteer Activities */}
+          {person.volunteerActivities.length > 0 && (
+            <motion.div variants={itemVariants}>
+              <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
+                VOLUNTEER ACTIVITIES
+              </h3>
+              <div className="space-y-4">
+                {person.volunteerActivities.map((project) => (
+                  <motion.div 
+                    key={project.title} 
+                    className="p-4 bg-gray-800/50 rounded-lg transition-colors hover:bg-gray-800/80"
+                    whileHover={{ y: -2 }}
+                  >
+                    <h4 className="font-bold text-white">{project.title}</h4>
+                    <p className="text-sm text-gray-300 my-1">{project.description}</p>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {project.tech.map(t => <span key={t} className={`text-xs bg-${person.theme.color}/10 text-${person.theme.color} px-2 py-1 rounded-full`}>{t}</span>)}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Education */}
+          {person.education.length > 0 && (
+            <motion.div variants={itemVariants}>
+              <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
+                EDUCATION
+              </h3>
+              <div className="space-y-4">
+                {person.education.map((edu, index) => (
+                  <div key={index} className="p-4 bg-gray-800/50 rounded-lg">
+                    <div className="flex justify-between items-baseline">
+                      <h4 className="font-bold text-white">{edu.degree}</h4>
+                      <span className="text-sm text-gray-400">{edu.date}</span>
+                    </div>
+                    <p className="text-sm text-gray-300 my-1">{edu.institution}</p>
+                    <ul className="list-disc list-inside mt-2 space-y-1">
+                      {edu.details.map(detail => <li key={detail} className="text-xs text-gray-400">{detail}</li>)}
+                    </ul>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+           {/* Certifications */}
+          {person.certifications.length > 0 && (
+            <motion.div variants={itemVariants}>
+              <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
+                CERTIFICATIONS
+              </h3>
+              <div className="space-y-3">
+                {person.certifications.map((cert, index) => (
+                  <div key={index} className="p-3 bg-gray-800/50 rounded-lg flex justify-between items-center">
+                    <div>
+                      <h4 className="font-semibold text-white text-sm">{cert.name}</h4>
+                      <p className="text-xs text-gray-400">{cert.issuer}</p>
+                    </div>
+                    <span className={`text-xs bg-${person.theme.color}/10 text-${person.theme.color} px-2 py-1 rounded-full whitespace-nowrap`}>{cert.date}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
 
           {/* Testimonials */}
-          <motion.div variants={itemVariants}>
-            <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
-              TESTIMONIALS
-            </h3>
-            <div className="space-y-4">
-              {person.testimonials.map((testimonial) => (
-                <div key={testimonial.author} className="p-4 bg-gray-800/50 rounded-lg italic relative">
-                  <FaQuoteLeft className={`absolute top-3 left-3 text-${person.theme.color}/30`} size={20} />
-                  <p className="pl-8 text-gray-300">"{testimonial.quote}"</p>
-                  <p className="text-right mt-2 text-sm font-semibold text-gray-400 not-italic">
-                    - {testimonial.author}, {testimonial.role}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          {person.testimonials.length > 0 && (
+            <motion.div variants={itemVariants}>
+              <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
+                TESTIMONIALS
+              </h3>
+              <div className="space-y-4">
+                {person.testimonials.map((testimonial) => (
+                  <div key={testimonial.author} className="p-4 bg-gray-800/50 rounded-lg italic relative">
+                    <FaQuoteLeft className={`absolute top-3 left-3 text-${person.theme.color}/30`} size={20} />
+                    <p className="pl-8 text-gray-300">"{testimonial.quote}"</p>
+                    <p className="text-right mt-2 text-sm font-semibold text-gray-400 not-italic">
+                      - {testimonial.author}, {testimonial.role}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Interests */}
+          {person.interests.length > 0 && (
+            <motion.div variants={itemVariants}>
+              <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
+                INTERESTS
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {person.interests.map(interest => (
+                  <span key={interest} className={`text-sm bg-${person.theme.color}/20 text-gray-200 px-3 py-1 rounded-full`}>{interest}</span>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* Why Hire Me */}
+          <WhyHireMe person={person} />
           
           {/* Connect */}
           <motion.div variants={itemVariants} className="pb-4">
@@ -197,6 +356,10 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                   rel="noopener noreferrer" 
                   className="p-3 bg-gray-800/50 rounded-full text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
                   aria-label={link.name}
+                  onHoverStart={() => playSound('hover')}
+                  onClick={() => playSound('click')}
+                  onMouseEnter={() => setVariant('hover')}
+                  onMouseLeave={() => setVariant('default')}
                   whileHover={{ scale: 1.2, y: -2, transition: { duration: 0.2 } }}
                   whileTap={{ scale: 0.9 }}
                 >
@@ -213,7 +376,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
         <SkillDetailModal 
           skill={selectedSkill} 
           person={person} 
-          onClose={() => setSelectedSkill(null)} 
+          onClose={handleCloseModal} 
         />
       )}
     </AnimatePresence>

@@ -2,24 +2,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMessageSquare, FiX, FiSend, FiLoader, FiUser, FiCpu } from 'react-icons/fi';
-import { Person } from '../types.ts';
+import { useSound } from '../hooks/useSound.ts';
+import { useChat } from '../hooks/useChat.ts';
+import { useCursor } from '../hooks/useCursor.ts';
 
-interface ChatBotProps {
-  person: Person | null;
-}
-
-interface Message {
-  role: 'user' | 'model' | 'system';
-  text: string;
-}
-
-const ChatBot: React.FC<ChatBotProps> = ({ person }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
+const ChatBot: React.FC = () => {
+  const { person, isOpen, toggleChat, messages, isLoading, sendMessage } = useChat();
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [chat, setChat] = useState<any | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { playSound } = useSound();
+  const { setVariant } = useCursor();
 
   const themeColor = person ? person.theme.color : 'brand-blue';
 
@@ -29,82 +21,17 @@ const ChatBot: React.FC<ChatBotProps> = ({ person }) => {
 
   useEffect(scrollToBottom, [messages]);
 
-  useEffect(() => {
-    const initializeChat = async () => {
-        const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : undefined;
-        if (!apiKey) {
-            setMessages([{ role: 'model', text: 'The AI assistant is not available. API key is not configured.' }]);
-            return;
-        }
-        
-        try {
-            const { GoogleGenAI } = await import('@google/genai');
-            const ai = new GoogleGenAI({ apiKey });
-            
-            const personContext = person 
-              ? `You are an expert AI assistant for ${person.name}, a ${person.title}.
-                Here is their portfolio information:
-                - About: ${person.about}
-                - Core Skills: ${person.coreSkills.join(', ')}
-                - Expertise: ${person.expertise.map(e => e.name).join(', ')}
-                - Projects: ${person.projects.map(p => `${p.title}: ${p.description}`).join('; ')}
-                Your role is to answer questions from potential recruiters or collaborators concisely and professionally based ONLY on this information.
-                If a question is outside this scope, politely decline to answer.
-                Start the conversation by introducing yourself and offering help.`
-              : `You are a helpful AI assistant for the OLAK interactive portfolio, which showcases Olabode Ilesanmi and Aisha Kadir.
-                Olabode is a Technical Executive Assistant & Developer.
-                Aisha is a Creative Designer.
-                Your role is to help visitors navigate the portfolio and answer general questions about the two professionals.
-                Start the conversation by introducing yourself and explaining what you can do.`;
-
-            const newChat = ai.chats.create({
-                model: 'gemini-2.5-flash',
-                config: {
-                    systemInstruction: personContext,
-                },
-            });
-            setChat(newChat);
-            
-            const initialMessage: Message = {
-                role: 'model',
-                text: person 
-                    ? `Hello! I'm ${person.name.split(' ')[0]}'s AI assistant. How can I help you learn more about their skills and experience?`
-                    : `Hello! I'm the AI assistant for the OLAK portfolio. You can ask me about Olabode or Aisha. Who would you like to know more about?`
-            };
-            setMessages([initialMessage]);
-        } catch (error) {
-            console.error("Failed to load or initialize AI chat:", error);
-            setMessages([{ role: 'model', text: 'Failed to initialize AI assistant.' }]);
-        }
-    };
-
-    if (isOpen) {
-      initializeChat();
-    } else {
-      setMessages([]);
-      setChat(null);
-    }
-  }, [isOpen, person]);
-
   const handleSend = async () => {
-    if (!input.trim() || !chat) return;
-
-    const userMessage: Message = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMessage]);
+    if (!input.trim()) return;
+    playSound('click');
+    const messageToSend = input;
     setInput('');
-    setIsLoading(true);
+    await sendMessage(messageToSend);
+  };
 
-    try {
-      const response = await chat.sendMessage({ message: input });
-      const modelMessage: Message = { role: 'model', text: response.text };
-      setMessages(prev => [...prev, modelMessage]);
-    } catch (error) {
-      console.error("Error sending message to Gemini:", error);
-      const errorMessage: Message = { role: 'model', text: 'Sorry, I encountered an error. Please try again.' };
-      setMessages(prev => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleToggle = () => {
+    playSound(isOpen ? 'close' : 'open');
+    toggleChat();
   };
 
   return (
@@ -112,7 +39,9 @@ const ChatBot: React.FC<ChatBotProps> = ({ person }) => {
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={handleToggle}
+        onMouseEnter={() => setVariant('hover')}
+        onMouseLeave={() => setVariant('default')}
         className={`fixed bottom-6 right-6 z-50 p-4 rounded-full bg-${themeColor} text-white shadow-lg ${person ? person.theme.shadow : 'shadow-[0_0_30px_5px_rgba(0,191,255,0.4)]'}`}
         aria-label="Open chat assistant"
       >
@@ -165,12 +94,16 @@ const ChatBot: React.FC<ChatBotProps> = ({ person }) => {
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask a question..."
                 className={`flex-1 bg-gray-800/80 border border-gray-700 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-${themeColor}`}
-                disabled={isLoading || !chat}
+                disabled={isLoading}
+                onMouseEnter={() => setVariant('text')}
+                onMouseLeave={() => setVariant('default')}
               />
               <button
                 onClick={handleSend}
-                disabled={isLoading || !input.trim() || !chat}
+                disabled={isLoading || !input.trim()}
                 className={`p-2.5 rounded-full bg-${themeColor} text-white disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors`}
+                onMouseEnter={() => setVariant('hover')}
+                onMouseLeave={() => setVariant('default')}
               >
                 <FiSend size={18} />
               </button>

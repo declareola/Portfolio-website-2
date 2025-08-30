@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiLoader } from 'react-icons/fi';
 import { Person, Skill } from '../types.ts';
+import { GoogleGenAI } from '@google/genai';
+import { useCursor } from '../hooks/useCursor.ts';
 
 interface SkillDetailModalProps {
   skill: Skill;
@@ -13,7 +15,13 @@ interface SkillDetailModalProps {
 const SkillDetailModal: React.FC<SkillDetailModalProps> = ({ skill, person, onClose }) => {
   const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const { setVariant } = useCursor();
   const themeColor = person.theme.color;
+  
+  const handleClose = () => {
+    setVariant('default');
+    onClose();
+  };
 
   useEffect(() => {
     const generateDescription = async () => {
@@ -26,13 +34,13 @@ const SkillDetailModal: React.FC<SkillDetailModalProps> = ({ skill, person, onCl
       }
 
       try {
-        const { GoogleGenAI } = await import('@google/genai');
         const ai = new GoogleGenAI({ apiKey });
         const prompt = `Based on the portfolio of ${person.name}, a ${person.title}, provide a concise, one-paragraph explanation of their expertise in "${skill.name}". You can infer from their projects or general about section. For example, connect the skill to a specific achievement or project mentioned.
         
         Portfolio context:
         - About: ${person.about}
-        - Projects: ${person.projects.map(p => `${p.title}: ${p.description}`).join('; ')}
+        // FIX: Property 'projects' does not exist on type 'Person'. Replaced with 'workExperience' and 'volunteerActivities'.
+        - Projects: ${[...person.workExperience, ...person.volunteerActivities].map(p => `${p.title}: ${p.description}`).join('; ')}
         
         Generate a compelling, short narrative.`;
         
@@ -60,7 +68,7 @@ const SkillDetailModal: React.FC<SkillDetailModalProps> = ({ skill, person, onCl
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-        onClick={onClose}
+        onClick={handleClose}
       >
         <motion.div
           initial={{ scale: 0.9, y: 20 }}
@@ -70,7 +78,13 @@ const SkillDetailModal: React.FC<SkillDetailModalProps> = ({ skill, person, onCl
           className={`relative w-full max-w-lg bg-gray-900/80 rounded-2xl border border-${themeColor}/50 p-6 ${person.theme.shadow}`}
           onClick={(e) => e.stopPropagation()}
         >
-          <button onClick={onClose} className={`absolute top-4 right-4 text-gray-400 hover:text-${themeColor} transition-colors p-1 rounded-full`} aria-label="Close modal">
+          <button 
+            onClick={handleClose} 
+            className={`absolute top-4 right-4 text-gray-400 hover:text-${themeColor} transition-colors p-1 rounded-full`} 
+            aria-label="Close modal"
+            onMouseEnter={() => setVariant('hover')}
+            onMouseLeave={() => setVariant('default')}
+          >
             <FiX size={24} />
           </button>
           

@@ -131,12 +131,17 @@
       }
       .custom-scrollbar-blue::-webkit-scrollbar-thumb:hover {
         background-color: #33cfff;
+        box-shadow: 0 0 8px rgba(0, 191, 255, 0.7);
       }
       .custom-scrollbar-pink::-webkit-scrollbar-thumb {
         background-color: #ff007f;
       }
       .custom-scrollbar-pink::-webkit-scrollbar-thumb:hover {
         background-color: #ff3399;
+        box-shadow: 0 0 8px rgba(255, 0, 127, 0.7);
+      }
+      .hide-cursor, .hide-cursor * {
+        cursor: none;
       }
     </style>
   <script type="importmap">
@@ -148,7 +153,7 @@
     "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.12",
     "react-icons/": "https://aistudiocdn.com/react-icons@^5.5.0/",
     "react-icons": "https://aistudiocdn.com/react-icons@^5.5.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^0.20.1"
+    "@google/genai": "https://esm.sh/@google/genai"
   }
 }
 </script>

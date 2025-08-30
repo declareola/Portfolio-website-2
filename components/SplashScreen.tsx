@@ -31,7 +31,7 @@ const SplashScreen: React.FC = () => {
       initial="hidden"
       animate="visible"
       exit="exit"
-      className="fixed inset-0 flex items-center justify-center bg-[#010409] z-50"
+      className="fixed inset-0 flex items-center justify-center bg-[#010409]/50 backdrop-blur-sm z-50"
     >
       <motion.div className="flex text-7xl md:text-9xl font-bold tracking-widest text-white/90">
         <motion.span variants={letterVariants} className="text-brand-blue">O</motion.span>
