@@ -13,8 +13,6 @@ import InteractiveBackground from './components/InteractiveBackground.tsx';
 import useAssetPreloader from './hooks/useAssetPreloader.ts';
 import { PORTFOLIO_DATA } from './constants.ts';
 import { ChatProvider } from './contexts/ChatContext.tsx';
-import { CursorProvider } from './contexts/CursorContext.tsx';
-import CustomCursor from './components/CustomCursor.tsx';
 import ProactiveChatPrompt from './components/ProactiveChatPrompt.tsx';
 
 const assetUrls = PORTFOLIO_DATA.map(p => p.imageUrl);
@@ -38,10 +36,9 @@ const AppContent: React.FC = () => {
     <ChatProvider person={selectedPerson}>
       <div 
         style={{ isolation: 'isolate' }}
-        className="relative min-h-screen w-full bg-[#010409] font-sans overflow-hidden star-bg animate-star-roam noise-bg hide-cursor"
+        className="relative min-h-screen w-full bg-[#010409] font-sans overflow-hidden star-bg animate-star-roam noise-bg"
       >
         <InteractiveBackground />
-        <CustomCursor />
         <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-transparent to-black/50" />
         <LayoutGroup>
           <AnimatePresence mode="wait">
@@ -72,9 +69,7 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <SoundProvider>
-      <CursorProvider>
         <AppContent />
-      </CursorProvider>
     </SoundProvider>
   );
 };

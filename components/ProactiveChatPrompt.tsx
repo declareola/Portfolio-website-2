@@ -2,12 +2,10 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMessageSquare } from 'react-icons/fi';
 import { useChat } from '../hooks/useChat.ts';
-import { useCursor } from '../hooks/useCursor.ts';
 import { useSound } from '../hooks/useSound.ts';
 
 const ProactiveChatPrompt: React.FC = () => {
   const { proactivePrompt, acceptProactivePrompt, dismissProactivePrompt, person } = useChat();
-  const { setVariant } = useCursor();
   const { playSound } = useSound();
   const themeColor = person ? person.theme.color : 'brand-blue';
 
@@ -28,7 +26,6 @@ const ProactiveChatPrompt: React.FC = () => {
 
   const handleClick = () => {
     playSound('open');
-    setVariant('default');
     acceptProactivePrompt();
   }
 
@@ -42,8 +39,6 @@ const ProactiveChatPrompt: React.FC = () => {
           transition={{ duration: 0.3, ease: 'easeOut' }}
           className="fixed bottom-24 right-6 z-50 w-[90vw] max-w-xs cursor-pointer"
           onClick={handleClick}
-          onMouseEnter={() => setVariant('hover')}
-          onMouseLeave={() => setVariant('default')}
         >
           <div className={`relative p-4 rounded-xl bg-gray-800/90 backdrop-blur-md border border-${themeColor}/50 shadow-lg`}>
             <div className={`absolute -bottom-2 right-6 w-4 h-4 bg-gray-800/90 border-b border-r border-${themeColor}/50 transform rotate-45`}></div>

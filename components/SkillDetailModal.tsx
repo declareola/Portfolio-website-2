@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiLoader } from 'react-icons/fi';
 import { Person, Skill } from '../types.ts';
 import { GoogleGenAI } from '@google/genai';
-import { useCursor } from '../hooks/useCursor.ts';
 
 interface SkillDetailModalProps {
   skill: Skill;
@@ -15,11 +14,9 @@ interface SkillDetailModalProps {
 const SkillDetailModal: React.FC<SkillDetailModalProps> = ({ skill, person, onClose }) => {
   const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const { setVariant } = useCursor();
   const themeColor = person.theme.color;
   
   const handleClose = () => {
-    setVariant('default');
     onClose();
   };
 
@@ -82,8 +79,6 @@ const SkillDetailModal: React.FC<SkillDetailModalProps> = ({ skill, person, onCl
             onClick={handleClose} 
             className={`absolute top-4 right-4 text-gray-400 hover:text-${themeColor} transition-colors p-1 rounded-full`} 
             aria-label="Close modal"
-            onMouseEnter={() => setVariant('hover')}
-            onMouseLeave={() => setVariant('default')}
           >
             <FiX size={24} />
           </button>

@@ -5,7 +5,6 @@ import { FiClipboard, FiCheck, FiCpu, FiLoader } from 'react-icons/fi';
 import { Person } from '../types.ts';
 import { GoogleGenAI } from '@google/genai';
 import { useSound } from '../hooks/useSound.ts';
-import { useCursor } from '../hooks/useCursor.ts';
 
 interface WhyHireMeProps {
   person: Person;
@@ -17,7 +16,6 @@ const WhyHireMe: React.FC<WhyHireMeProps> = ({ person }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const { playSound } = useSound();
-  const { setVariant } = useCursor();
   const themeColor = person.theme.color;
 
   const handleGeneratePitch = async () => {
@@ -87,15 +85,11 @@ const WhyHireMe: React.FC<WhyHireMeProps> = ({ person }) => {
           rows={5}
           className={`w-full p-3 bg-gray-800/80 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-${themeColor} transition-all custom-scrollbar`}
           disabled={isLoading}
-          onMouseEnter={() => setVariant('text')}
-          onMouseLeave={() => setVariant('default')}
         />
         <button
           onClick={handleGeneratePitch}
           disabled={isLoading || !jobDescription.trim()}
           className={`absolute bottom-3 right-3 flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-${themeColor}/80 rounded-full transition-all hover:bg-${themeColor} disabled:bg-gray-600 disabled:cursor-not-allowed`}
-          onMouseEnter={() => setVariant('hover')}
-          onMouseLeave={() => setVariant('default')}
         >
           {isLoading ? (
             <>
@@ -124,8 +118,6 @@ const WhyHireMe: React.FC<WhyHireMeProps> = ({ person }) => {
               onClick={handleCopy}
               className={`absolute top-2 right-2 p-2 rounded-full text-gray-400 hover:text-${themeColor} hover:bg-${themeColor}/20 transition-colors`}
               aria-label="Copy pitch"
-              onMouseEnter={() => setVariant('hover')}
-              onMouseLeave={() => setVariant('default')}
             >
               {isCopied ? <FiCheck className={`text-${themeColor}`} /> : <FiClipboard />}
             </button>

@@ -3,11 +3,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { FiVolume2, FiVolumeX } from 'react-icons/fi';
 import { useSound } from '../hooks/useSound.ts';
-import { useCursor } from '../hooks/useCursor.ts';
 
 const SoundToggle: React.FC = () => {
   const { isMuted, toggleMute } = useSound();
-  const { setVariant } = useCursor();
 
   const handleToggle = () => {
     toggleMute();
@@ -18,8 +16,6 @@ const SoundToggle: React.FC = () => {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       onClick={handleToggle}
-      onMouseEnter={() => setVariant('hover')}
-      onMouseLeave={() => setVariant('default')}
       className={`fixed bottom-6 left-6 z-50 p-4 rounded-full shadow-lg transition-colors
         ${isMuted 
           ? 'bg-gray-600/70 text-white' 

@@ -1,6 +1,5 @@
-
 import React, { useState, useRef } from 'react';
-import { motion, Variants, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Person, Skill } from '../types.ts';
 import { FiArrowLeft, FiCheckCircle, FiDownload } from 'react-icons/fi';
 import { FaQuoteLeft } from 'react-icons/fa';
@@ -8,21 +7,21 @@ import SkillDetailModal from './SkillDetailModal.tsx';
 import { useSound } from '../hooks/useSound.ts';
 import WhyHireMe from './WhyHireMe.tsx';
 import { useProactiveTrigger } from '../hooks/useProactiveTrigger.ts';
-import { useCursor } from '../hooks/useCursor.ts';
 
 interface PortfolioDetailProps {
   person: Person;
   onBack: () => void;
 }
 
-const containerVariants: Variants = {
+const containerVariants = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: {
     opacity: 1,
     scale: 1,
     transition: {
       duration: 0.5,
-      ease: 'easeOut',
+      // FIX: Use 'as const' to assert the literal type for 'ease', resolving an issue with framer-motion's Transition type where a generic 'string' is not assignable.
+      ease: 'easeOut' as const,
       when: 'beforeChildren',
       staggerChildren: 0.1,
     },
@@ -30,11 +29,11 @@ const containerVariants: Variants = {
   exit: {
     opacity: 0,
     scale: 0.95,
-    transition: { duration: 0.3, ease: 'easeIn' },
+    transition: { duration: 0.3, ease: 'easeIn' as const },
   },
 };
 
-const itemVariants: Variants = {
+const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
@@ -42,7 +41,6 @@ const itemVariants: Variants = {
 const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const { playSound } = useSound();
-  const { setVariant } = useCursor();
 
   const expertiseRef = useRef<HTMLDivElement>(null);
   const workExperienceRef = useRef<HTMLDivElement>(null);
@@ -61,13 +59,11 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
 
   const handleBackClick = () => {
     playSound('click');
-    setVariant('default');
     onBack();
   };
 
   const handleSkillClick = (skill: Skill) => {
     playSound('open');
-    setVariant('default');
     setSelectedSkill(skill);
   };
 
@@ -76,7 +72,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
     setSelectedSkill(null);
   };
 
-  const skillItemVariants: Variants = {
+  const skillItemVariants = {
     initial: {},
     hover: {
       scale: 1.08,
@@ -85,7 +81,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
     }
   };
 
-  const skillIconVariants: Variants = {
+  const skillIconVariants = {
     initial: {
       scale: 1,
       rotate: 0,
@@ -93,7 +89,8 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
     hover: {
       scale: 1.2,
       rotate: -8,
-      transition: { type: 'spring', stiffness: 400, damping: 10 }
+      // FIX: Use 'as const' to assert the literal type for 'type', resolving an issue with framer-motion's Transition type where a generic 'string' is not assignable.
+      transition: { type: 'spring' as const, stiffness: 400, damping: 10 }
     }
   };
 
@@ -112,8 +109,6 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
         className={`absolute top-4 left-4 text-gray-400 hover:text-${person.theme.color} transition-colors z-10 p-2 rounded-full hover:bg-${person.theme.color}/20`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        onMouseEnter={() => setVariant('hover')}
-        onMouseLeave={() => setVariant('default')}
         aria-label="Go back"
       >
         <FiArrowLeft size={24} />
@@ -143,11 +138,10 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
             <motion.a
                 variants={itemVariants}
                 href={person.resumeUrl}
-                download="Olabode_Ilesanmi_Resume.html"
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => playSound('click')}
                 onHoverStart={() => playSound('hover')}
-                onMouseEnter={() => setVariant('hover')}
-                onMouseLeave={() => setVariant('default')}
                 className={`inline-flex items-center justify-center gap-2 px-6 py-3 mt-6 text-white bg-${person.theme.color}/80 rounded-full font-semibold transition-colors hover:bg-${person.theme.color}`}
                 whileHover={{ scale: 1.05, y: -2, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.95 }}
@@ -201,8 +195,6 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                   initial="initial"
                   whileHover="hover"
                   onHoverStart={() => playSound('hover')}
-                  onMouseEnter={() => setVariant('hover')}
-                  onMouseLeave={() => setVariant('default')}
                   onClick={() => handleSkillClick(skill)}
                 >
                   <motion.div variants={skillIconVariants}>
@@ -358,8 +350,6 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                   aria-label={link.name}
                   onHoverStart={() => playSound('hover')}
                   onClick={() => playSound('click')}
-                  onMouseEnter={() => setVariant('hover')}
-                  onMouseLeave={() => setVariant('default')}
                   whileHover={{ scale: 1.2, y: -2, transition: { duration: 0.2 } }}
                   whileTap={{ scale: 0.9 }}
                 >

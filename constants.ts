@@ -16,9 +16,9 @@ export const PORTFOLIO_DATA: Person[] = [
     id: 'olabode',
     name: 'Olabode Ilesanmi',
     title: 'Technical Executive Assistant & Developer',
-    imageUrl: 'https://i.imgur.com/s4a27n9.jpeg',
+    imageUrl: 'https://drive.google.com/file/d/1yw8UHB4_a5muzALZJM1LmWdVEG9aHP65/view?usp=drivesdk',
     about: "Technical Executive Assistant with 5+ years of experience in executive support, IT operations, and data analytics. Expert in Microsoft 365, Power BI, Google Workspace, and web development (HTML/CSS, React). Proven track record managing C-level executives, automating workflows, and delivering data-driven insights for remote and hybrid teams.",
-    resumeUrl: '/resume_olabode.html',
+    resumeUrl: 'https://docs.google.com/document/d/1jkHKWUpL8lPzub4HRS3QkaV97gxJSou5/export?format=pdf',
     coreSkills: [
       'Executive & Administrative Support',
       'Global Calendar Management',
@@ -80,8 +80,8 @@ export const PORTFOLIO_DATA: Person[] = [
       },
     ],
     connect: [
-      { name: 'GitHub', icon: FiGithub, url: 'https://github.com' },
-      { name: 'LinkedIn', icon: FiLinkedin, url: 'https://www.linkedin.com/in/olabode-ilesanmi/' },
+      { name: 'GitHub', icon: FiGithub, url: 'https://github.com/declareola' },
+      { name: 'LinkedIn', icon: FiLinkedin, url: 'https://www.linkedin.com/in/olabode-johnson-ilesanmi-20193795' },
       { name: 'Mail', icon: FiMail, url: 'mailto:ilesanmiolabode2@gmail.com' },
     ],
     certifications: [
@@ -118,7 +118,7 @@ export const PORTFOLIO_DATA: Person[] = [
     id: 'aisha',
     name: 'Aishat Kadir',
     title: 'Administrative Assistant',
-    imageUrl: 'https://i.imgur.com/D4s61eE.jpeg',
+    imageUrl: 'https://imgur.com/a/jaTWoTv',
     about: "Aishat Kadir is a proactive Virtual Assistant with hands-on remote experience in client coordination, administrative support, and calendar and email management. She is skilled in using Google Workspace, Zoom, Canva, and Microsoft Excel, and has a proven ability to support teams across multiple time zones and streamline workflows. She is dedicated to enhancing business productivity through operational efficiency and seamless virtual support.",
     resumeUrl: '#', // Placeholder URL
     coreSkills: [

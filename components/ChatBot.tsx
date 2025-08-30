@@ -4,14 +4,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FiMessageSquare, FiX, FiSend, FiLoader, FiUser, FiCpu } from 'react-icons/fi';
 import { useSound } from '../hooks/useSound.ts';
 import { useChat } from '../hooks/useChat.ts';
-import { useCursor } from '../hooks/useCursor.ts';
 
 const ChatBot: React.FC = () => {
   const { person, isOpen, toggleChat, messages, isLoading, sendMessage } = useChat();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { playSound } = useSound();
-  const { setVariant } = useCursor();
 
   const themeColor = person ? person.theme.color : 'brand-blue';
 
@@ -40,8 +38,6 @@ const ChatBot: React.FC = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={handleToggle}
-        onMouseEnter={() => setVariant('hover')}
-        onMouseLeave={() => setVariant('default')}
         className={`fixed bottom-6 right-6 z-50 p-4 rounded-full bg-${themeColor} text-white shadow-lg ${person ? person.theme.shadow : 'shadow-[0_0_30px_5px_rgba(0,191,255,0.4)]'}`}
         aria-label="Open chat assistant"
       >
@@ -95,15 +91,11 @@ const ChatBot: React.FC = () => {
                 placeholder="Ask a question..."
                 className={`flex-1 bg-gray-800/80 border border-gray-700 rounded-full px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-${themeColor}`}
                 disabled={isLoading}
-                onMouseEnter={() => setVariant('text')}
-                onMouseLeave={() => setVariant('default')}
               />
               <button
                 onClick={handleSend}
                 disabled={isLoading || !input.trim()}
                 className={`p-2.5 rounded-full bg-${themeColor} text-white disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors`}
-                onMouseEnter={() => setVariant('hover')}
-                onMouseLeave={() => setVariant('default')}
               >
                 <FiSend size={18} />
               </button>
