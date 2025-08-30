@@ -10,7 +10,8 @@ interface WhyHireMeProps {
   person: Person;
 }
 
-const WhyHireMe: React.FC<WhyHireMeProps> = ({ person }) => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const WhyHireMe = ({ person }: WhyHireMeProps) => {
   const [jobDescription, setJobDescription] = useState('');
   const [pitch, setPitch] = useState('');
   const [isLoading, setIsLoading] = useState(false);

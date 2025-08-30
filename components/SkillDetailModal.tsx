@@ -11,7 +11,8 @@ interface SkillDetailModalProps {
   onClose: () => void;
 }
 
-const SkillDetailModal: React.FC<SkillDetailModalProps> = ({ skill, person, onClose }) => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const SkillDetailModal = ({ skill, person, onClose }: SkillDetailModalProps) => {
   const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const themeColor = person.theme.color;

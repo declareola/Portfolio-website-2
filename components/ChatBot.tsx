@@ -5,7 +5,8 @@ import { FiMessageSquare, FiX, FiSend, FiLoader, FiUser, FiCpu } from 'react-ico
 import { useSound } from '../hooks/useSound.ts';
 import { useChat } from '../hooks/useChat.ts';
 
-const ChatBot: React.FC = () => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const ChatBot = () => {
   const { person, isOpen, toggleChat, messages, isLoading, sendMessage } = useChat();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);

@@ -26,7 +26,8 @@ const containerVariants = {
   },
 };
 
-const PortfolioCard: React.FC<{ person: Person; onSelect: (person: Person) => void; rotate: { x: number; y: number } }> = ({ person, onSelect, rotate }) => {
+// FIX: Removed React.FC and destructured props with types to resolve framer-motion prop type errors.
+const PortfolioCard = ({ person, onSelect, rotate }: { person: Person; onSelect: (person: Person) => void; rotate: { x: number; y: number } }) => {
   const { playSound } = useSound();
   
   return (
@@ -36,7 +37,8 @@ const PortfolioCard: React.FC<{ person: Person; onSelect: (person: Person) => vo
         playSound('click');
         onSelect(person);
       }}
-      onHoverStart={() => playSound('hover')}
+      // FIX: Replaced deprecated onHoverStart with onMouseEnter.
+      onMouseEnter={() => playSound('hover')}
       className="relative flex flex-col items-center justify-center p-8 space-y-4 cursor-pointer w-full max-w-sm md:max-w-md lg:max-w-lg group"
       // FIX: Moved rotateX and rotateY from the style prop to the animate prop to comply with recent framer-motion API changes.
       animate={{ rotateX: rotate.x, rotateY: rotate.y }}
@@ -66,8 +68,8 @@ const PortfolioCard: React.FC<{ person: Person; onSelect: (person: Person) => vo
   );
 };
 
-
-const LandingPage: React.FC<LandingPageProps> = ({ onSelect }) => {
+// FIX: Removed React.FC to resolve framer-motion prop type errors.
+const LandingPage = ({ onSelect }: LandingPageProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [rotate, setRotate] = useState({ x: 0, y: 0 });
 

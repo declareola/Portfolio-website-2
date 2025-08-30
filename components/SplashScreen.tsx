@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const SplashScreen: React.FC = () => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const SplashScreen = () => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

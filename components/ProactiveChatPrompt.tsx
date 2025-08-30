@@ -4,7 +4,8 @@ import { FiMessageSquare } from 'react-icons/fi';
 import { useChat } from '../hooks/useChat.ts';
 import { useSound } from '../hooks/useSound.ts';
 
-const ProactiveChatPrompt: React.FC = () => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const ProactiveChatPrompt = () => {
   const { proactivePrompt, acceptProactivePrompt, dismissProactivePrompt, person } = useChat();
   const { playSound } = useSound();
   const themeColor = person ? person.theme.color : 'brand-blue';

@@ -38,7 +38,8 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const PortfolioDetail = ({ person, onBack }: PortfolioDetailProps) => {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const { playSound } = useSound();
 
@@ -141,7 +142,8 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => playSound('click')}
-                onHoverStart={() => playSound('hover')}
+                // FIX: Replaced deprecated onHoverStart with onMouseEnter.
+                onMouseEnter={() => playSound('hover')}
                 className={`inline-flex items-center justify-center gap-2 px-6 py-3 mt-6 text-white bg-${person.theme.color}/80 rounded-full font-semibold transition-colors hover:bg-${person.theme.color}`}
                 whileHover={{ scale: 1.05, y: -2, transition: { duration: 0.2 } }}
                 whileTap={{ scale: 0.95 }}
@@ -159,7 +161,8 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
               {person.coreSkills.map(skill => (
                  <motion.div
                   key={skill}
-                  onHoverStart={() => playSound('hover')}
+                  // FIX: Replaced deprecated onHoverStart with onMouseEnter.
+                  onMouseEnter={() => playSound('hover')}
                   className={`flex items-center gap-2 p-3 bg-gray-800/50 border border-${person.theme.color}/50 rounded-lg shadow-sm`}
                   whileHover={{
                     scale: 1.05,
@@ -194,7 +197,8 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                   variants={skillItemVariants}
                   initial="initial"
                   whileHover="hover"
-                  onHoverStart={() => playSound('hover')}
+                  // FIX: Replaced deprecated onHoverStart with onMouseEnter.
+                  onMouseEnter={() => playSound('hover')}
                   onClick={() => handleSkillClick(skill)}
                 >
                   <motion.div variants={skillIconVariants}>
@@ -220,7 +224,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                     whileHover={{ y: -2 }}
                   >
                     <h4 className="font-bold text-white">{project.title}</h4>
-                    <p className="text-sm text-gray-300 my-1">{project.description}</p>
+                    <p className="text-sm text-gray-300 my-1" dangerouslySetInnerHTML={{ __html: project.description }} />
                     <div className="flex flex-wrap gap-2 mt-2">
                       {project.tech.map(t => <span key={t} className={`text-xs bg-${person.theme.color}/10 text-${person.theme.color} px-2 py-1 rounded-full`}>{t}</span>)}
                     </div>
@@ -348,7 +352,8 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
                   rel="noopener noreferrer" 
                   className="p-3 bg-gray-800/50 rounded-full text-gray-300 hover:text-white hover:bg-gray-700/50 transition-colors"
                   aria-label={link.name}
-                  onHoverStart={() => playSound('hover')}
+                  // FIX: Replaced deprecated onHoverStart with onMouseEnter.
+                  onMouseEnter={() => playSound('hover')}
                   onClick={() => playSound('click')}
                   whileHover={{ scale: 1.2, y: -2, transition: { duration: 0.2 } }}
                   whileTap={{ scale: 0.9 }}

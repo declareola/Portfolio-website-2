@@ -16,7 +16,7 @@ export const PORTFOLIO_DATA: Person[] = [
     id: 'olabode',
     name: 'Olabode Ilesanmi',
     title: 'Technical Executive Assistant & Developer',
-    imageUrl: 'https://drive.google.com/file/d/1yw8UHB4_a5muzALZJM1LmWdVEG9aHP65/view?usp=drivesdk',
+    imageUrl: 'https://drive.google.com/uc?export=view&id=1yw8UHB4_a5muzALZJM1LmWdVEG9aHP65',
     about: "Technical Executive Assistant with 5+ years of experience in executive support, IT operations, and data analytics. Expert in Microsoft 365, Power BI, Google Workspace, and web development (HTML/CSS, React). Proven track record managing C-level executives, automating workflows, and delivering data-driven insights for remote and hybrid teams.",
     resumeUrl: 'https://docs.google.com/document/d/1jkHKWUpL8lPzub4HRS3QkaV97gxJSou5/export?format=pdf',
     coreSkills: [
@@ -45,6 +45,16 @@ export const PORTFOLIO_DATA: Person[] = [
       { name: 'Power Automate', icon: FiZap },
     ],
     workExperience: [
+      {
+        title: 'Cara: AI Communication Coach',
+        description: 'An AI-powered web app to help Nigerian professionals master American English comprehension and improve communication skills. It provides tailored tools for career advancement, focusing on industry-specific content and personalized coaching. <a href="https://cara-the-ai-communication-coach-861072042669.us-west1.run.app/" target="_blank" rel="noopener noreferrer" class="text-brand-blue hover:underline">View Project</a>',
+        tech: ['AI Coach', 'Resume Builder', 'Interview Prep', 'Accent Training', 'Web App'],
+      },
+      {
+        title: 'SHARON: AI Academic Assistant',
+        description: 'SHARON (Scholarly Help and Research Online Navigator) is an AI-powered academic assistant designed to support students throughout their academic journey. It offers a suite of intelligent tools to enhance productivity and learning, from brainstorming to presentation prep. <a href="https://rccgregion.github.io/Academic-Assistant/" target="_blank" rel="noopener noreferrer" class="text-brand-blue hover:underline">View Project</a>',
+        tech: ['AI Assistant', 'Academic Tools', 'Research', 'Document Drafting', 'Web App'],
+      },
       {
         title: 'Administrative Assistant | RCCG, City of Grace',
         description: 'Managed a complex calendar with 10+ weekly appointments, streamlined communication for over 50 stakeholders, and implemented a digital filing system that reduced document retrieval time by 40%. Coordinated daily office operations for a team of 10+, improving workflow efficiency by 25%.',
@@ -118,7 +128,7 @@ export const PORTFOLIO_DATA: Person[] = [
     id: 'aisha',
     name: 'Aishat Kadir',
     title: 'Administrative Assistant',
-    imageUrl: 'https://imgur.com/a/jaTWoTv',
+    imageUrl: 'https://i.imgur.com/WJ9m521.jpeg',
     about: "Aishat Kadir is a proactive Virtual Assistant with hands-on remote experience in client coordination, administrative support, and calendar and email management. She is skilled in using Google Workspace, Zoom, Canva, and Microsoft Excel, and has a proven ability to support teams across multiple time zones and streamline workflows. She is dedicated to enhancing business productivity through operational efficiency and seamless virtual support.",
     resumeUrl: '#', // Placeholder URL
     coreSkills: [

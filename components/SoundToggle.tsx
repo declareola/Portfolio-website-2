@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { FiVolume2, FiVolumeX } from 'react-icons/fi';
 import { useSound } from '../hooks/useSound.ts';
 
-const SoundToggle: React.FC = () => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const SoundToggle = () => {
   const { isMuted, toggleMute } = useSound();
 
   const handleToggle = () => {

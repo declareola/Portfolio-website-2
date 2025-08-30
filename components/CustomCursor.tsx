@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useCursor } from '../hooks/useCursor.ts';
 
-const CustomCursor: React.FC = () => {
+// FIX: Removed React.FC to resolve issue with framer-motion prop types.
+const CustomCursor = () => {
   const { variant } = useCursor();
   const [mousePosition, setMousePosition] = useState({ x: -100, y: -100 });
 
@@ -51,11 +52,9 @@ const CustomCursor: React.FC = () => {
         variants={mainCursorVariants}
         className="fixed top-0 left-0 rounded-full z-[100] pointer-events-none -translate-x-1/2 -translate-y-1/2"
         animate={variant}
-        // FIX: Moved motion values `x` and `y` into the `style` prop. The version of framer-motion used does not support them as direct component props, causing a type error.
-        style={{
-          x: mousePosition.x,
-          y: mousePosition.y,
-        }}
+        // FIX: Moved motion values `x` and `y` from the `style` prop to direct props. This is the correct API for animating position and fixes the type error.
+        x={mousePosition.x}
+        y={mousePosition.y}
         transition={{ type: 'spring', stiffness: 800, damping: 40 }}
       />
     </>
