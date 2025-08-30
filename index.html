@@ -10,6 +10,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
       tailwind.config = {
+        safelist: [
+          'text-brand-blue',
+          'text-brand-pink',
+          'hover:text-brand-blue',
+          'hover:text-brand-pink',
+          'bg-brand-blue',
+          'bg-brand-pink',
+          'bg-brand-blue/10',
+          'bg-brand-pink/10',
+          'bg-brand-blue/20',
+          'bg-brand-pink/20',
+          'bg-brand-blue/30',
+          'bg-brand-pink/30',
+          'bg-brand-blue/80',
+          'bg-brand-pink/80',
+          'hover:bg-brand-blue/20',
+          'hover:bg-brand-pink/20',
+          'border-brand-blue/50',
+          'border-brand-pink/50',
+          'focus:ring-brand-blue',
+          'focus:ring-brand-pink',
+        ],
         theme: {
           extend: {
             fontFamily: {
@@ -125,7 +147,8 @@
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
     "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.12",
     "react-icons/": "https://aistudiocdn.com/react-icons@^5.5.0/",
-    "react-icons": "https://aistudiocdn.com/react-icons@^5.5.0"
+    "react-icons": "https://aistudiocdn.com/react-icons@^5.5.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^0.20.1"
   }
 }
 </script>

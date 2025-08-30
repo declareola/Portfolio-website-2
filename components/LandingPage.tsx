@@ -1,7 +1,8 @@
+
 import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { PORTFOLIO_DATA } from '../constants';
-import { Person } from '../types';
+import { PORTFOLIO_DATA } from '../constants.ts';
+import { Person } from '../types.ts';
 
 interface LandingPageProps {
   onSelect: (person: Person) => void;
@@ -30,9 +31,9 @@ const PortfolioCard: React.FC<{ person: Person; onSelect: (person: Person) => vo
       layoutId={`card-container-${person.id}`}
       onClick={() => onSelect(person)}
       className="relative flex flex-col items-center justify-center p-8 space-y-4 cursor-pointer w-full max-w-sm md:max-w-md lg:max-w-lg group"
+      // FIX: Moved rotateX and rotateY from the style prop to the animate prop to comply with recent framer-motion API changes.
+      animate={{ rotateX: rotate.x, rotateY: rotate.y }}
       style={{
-        rotateX: rotate.x,
-        rotateY: rotate.y,
         transformStyle: 'preserve-3d',
       }}
       whileHover={{ scale: 1.05, transition: { duration: 0.3 } }}
@@ -93,17 +94,17 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSelect }) => {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
+      // FIX: The 'perspective' property is no longer accepted directly in style types in recent framer-motion versions. It should be applied via the 'transform' property.
+      style={{ transform: 'perspective(1200px)', transformStyle: 'preserve-3d' }}
     >
       <PortfolioCard person={PORTFOLIO_DATA[0]} onSelect={onSelect} rotate={rotate} />
       
       <motion.div 
         initial={{ opacity: 0, scale: 0.5 }}
-        animate={{ opacity: 1, scale: 1 }}
+        animate={{ opacity: 1, scale: 1, rotateX: rotate.x * 1.5, rotateY: rotate.y * 1.5 }}
         transition={{ delay: 0.8, duration: 0.5, type: 'spring' }}
+        // FIX: Moved rotateX and rotateY to the animate prop.
         style={{ 
-          rotateX: rotate.x * 1.5, 
-          rotateY: rotate.y * 1.5,
           transform: 'translateZ(60px)'
         }}
         className="absolute text-5xl md:text-7xl font-bold text-white/50 pointer-events-none"

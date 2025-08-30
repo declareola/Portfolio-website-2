@@ -35,6 +35,7 @@ export interface Person {
   projects: Project[];
   testimonials: Testimonial[];
   connect: SocialLink[];
+  resumeUrl?: string;
   theme: {
     color: string;
     shadow: string;

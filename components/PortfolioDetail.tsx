@@ -1,16 +1,16 @@
-import React from 'react';
-// FIX: Import Variants from framer-motion to explicitly type animation variants.
-import { motion, Variants } from 'framer-motion';
-import { Person } from '../types';
-import { FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+
+import React, { useState } from 'react';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
+import { Person, Skill } from '../types.ts';
+import { FiArrowLeft, FiCheckCircle, FiDownload } from 'react-icons/fi';
 import { FaQuoteLeft } from 'react-icons/fa';
+import SkillDetailModal from './SkillDetailModal.tsx';
 
 interface PortfolioDetailProps {
   person: Person;
   onBack: () => void;
 }
 
-// FIX: Add Variants type to fix type error on `ease` property.
 const containerVariants: Variants = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: {
@@ -30,21 +30,23 @@ const containerVariants: Variants = {
   },
 };
 
-// FIX: Add Variants type for consistency.
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
 const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => {
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+
   return (
+    <>
     <motion.div
       layoutId={`card-container-${person.id}`}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
       exit="exit"
-      className={`relative w-full max-w-5xl bg-black/30 backdrop-blur-md rounded-2xl border ${person.theme.border}/50 p-6 md:p-10 ${person.theme.shadow} max-h-[90vh] flex flex-col`}
+      className={`relative w-full max-w-5xl bg-black/30 backdrop-blur-md rounded-2xl border border-${person.theme.color}/50 p-6 md:p-10 ${person.theme.shadow} max-h-[90vh] flex flex-col`}
     >
       <motion.button 
         onClick={onBack} 
@@ -76,18 +78,46 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
           <motion.p variants={itemVariants} className="text-gray-300 mt-4 text-sm leading-relaxed">
             {person.about}
           </motion.p>
+           {person.resumeUrl && (
+            <motion.a
+                variants={itemVariants}
+                href={person.resumeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className={`inline-flex items-center justify-center gap-2 px-6 py-3 mt-6 text-white bg-${person.theme.color}/80 rounded-full font-semibold transition-colors hover:bg-${person.theme.color}`}
+                whileHover={{ scale: 1.05, y: -2, transition: { duration: 0.2 } }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Download Resume"
+            >
+                <FiDownload />
+                <span>Download Resume</span>
+            </motion.a>
+          )}
           <motion.div variants={itemVariants} className="mt-6 w-full flex-shrink-0">
             <h3 className={`text-lg font-semibold mb-3 text-${person.theme.color} text-center lg:text-left`}>
               CORE SKILLS
             </h3>
-            <ul className="space-y-2">
+            <div className="flex flex-wrap justify-center lg:justify-start gap-3">
               {person.coreSkills.map(skill => (
-                <li key={skill} className="flex items-start gap-2 text-sm text-gray-300">
-                  <FiCheckCircle className={`text-${person.theme.color} mt-1 flex-shrink-0`} />
-                  <span>{skill}</span>
-                </li>
+                 <motion.div
+                  key={skill}
+                  className={`flex items-center gap-2 p-3 bg-gray-800/50 border border-${person.theme.color}/50 rounded-lg shadow-sm`}
+                  whileHover={{
+                    scale: 1.05,
+                    y: -4,
+                    boxShadow: person.theme.color === 'brand-blue'
+                      ? '0 0 15px rgba(0, 191, 255, 0.4)'
+                      : '0 0 15px rgba(255, 0, 127, 0.4)',
+                    borderColor: person.theme.color === 'brand-blue' ? '#00bfff' : '#ff007f',
+                    transition: { duration: 0.2 },
+                  }}
+                >
+                  <FiCheckCircle className={`text-${person.theme.color} flex-shrink-0`} />
+                  <span className="text-gray-200 text-sm">{skill}</span>
+                </motion.div>
               ))}
-            </ul>
+            </div>
           </motion.div>
         </motion.div>
 
@@ -95,15 +125,16 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
         <div className="lg:w-2/3 space-y-8">
           {/* Expertise */}
           <motion.div variants={itemVariants}>
-            <h3 className={`text-xl font-semibold border-b-2 ${person.theme.border}/50 pb-2 mb-4 text-${person.theme.color}`}>
+            <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
               EXPERTISE
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {person.expertise.map((skill) => (
                 <motion.div 
                   key={skill.name} 
-                  className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg"
+                  className="flex items-center gap-3 p-3 bg-gray-800/50 rounded-lg cursor-pointer"
                   whileHover={{ scale: 1.08, y: -4, transition: { duration: 0.2 } }}
+                  onClick={() => setSelectedSkill(skill)}
                 >
                   <skill.icon className={`text-${person.theme.color}`} size={20} />
                   <span className="text-gray-200">{skill.name}</span>
@@ -114,7 +145,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
           
           {/* Projects */}
           <motion.div variants={itemVariants}>
-            <h3 className={`text-xl font-semibold border-b-2 ${person.theme.border}/50 pb-2 mb-4 text-${person.theme.color}`}>
+            <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
               PROJECTS
             </h3>
             <div className="space-y-4">
@@ -136,7 +167,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
 
           {/* Testimonials */}
           <motion.div variants={itemVariants}>
-            <h3 className={`text-xl font-semibold border-b-2 ${person.theme.border}/50 pb-2 mb-4 text-${person.theme.color}`}>
+            <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
               TESTIMONIALS
             </h3>
             <div className="space-y-4">
@@ -154,7 +185,7 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
           
           {/* Connect */}
           <motion.div variants={itemVariants} className="pb-4">
-            <h3 className={`text-xl font-semibold border-b-2 ${person.theme.border}/50 pb-2 mb-4 text-${person.theme.color}`}>
+            <h3 className={`text-xl font-semibold border-b-2 border-${person.theme.color}/50 pb-2 mb-4 text-${person.theme.color}`}>
               CONNECT
             </h3>
             <div className="flex items-center gap-4">
@@ -177,6 +208,16 @@ const PortfolioDetail: React.FC<PortfolioDetailProps> = ({ person, onBack }) => 
         </div>
       </div>
     </motion.div>
+    <AnimatePresence>
+      {selectedSkill && (
+        <SkillDetailModal 
+          skill={selectedSkill} 
+          person={person} 
+          onClose={() => setSelectedSkill(null)} 
+        />
+      )}
+    </AnimatePresence>
+    </>
   );
 };
 

@@ -1,9 +1,9 @@
 import React from 'react';
-// FIX: Import Variants from framer-motion to explicitly type animation variants.
+// FIX: Re-imported 'Variants' and applied it to variant objects. The 'Variants' type helps TypeScript correctly infer the types for animation properties like 'ease', resolving the assignment error.
 import { motion, Variants } from 'framer-motion';
 
 const SplashScreen: React.FC = () => {
-  // FIX: Add Variants type to fix type error on `ease` property.
+  // FIX: Added Variants type to fix type error.
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
@@ -19,7 +19,7 @@ const SplashScreen: React.FC = () => {
     }
   };
 
-  // FIX: Add Variants type for consistency.
+  // FIX: Added Variants type for consistency.
   const letterVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },

@@ -1,4 +1,5 @@
-import { Person } from './types';
+
+import { Person } from './types.ts';
 // FIX: Replace unavailable SiPowerbi icon with FiBarChart2 from Feather Icons.
 import { 
     FiDatabase, FiLayers, FiCode, FiFigma, FiPenTool, FiCamera, 
@@ -14,6 +15,7 @@ export const PORTFOLIO_DATA: Person[] = [
     title: 'Technical Executive Assistant & Developer',
     imageUrl: 'https://images.weserv.nl/?url=i.imgur.com/CqXf9Vf.jpeg',
     about: "Technical Executive Assistant with 5+ years of experience in executive support, IT operations, and data analytics. Expert in Microsoft 365, Power BI, Google Workspace, and web development (HTML/CSS, React). Proven track record managing C-level executives, automating workflows, and delivering data-driven insights for remote and hybrid teams.",
+    resumeUrl: '#', // Placeholder URL
     coreSkills: [
       'Executive & Administrative Support',
       'Global Calendar Management',
@@ -77,6 +79,7 @@ export const PORTFOLIO_DATA: Person[] = [
     title: 'Creative Designer',
     imageUrl: 'https://images.weserv.nl/?url=i.imgur.com/N7b2oJp.jpeg',
     about: "A creative visionary with a passion for crafting beautiful and intuitive user experiences. Specializing in branding, illustration, and digital product design. My goal is to merge aesthetics with functionality to create products that are not only stunning but also a joy to use. Let's create something amazing together.",
+    resumeUrl: '#', // Placeholder URL
     coreSkills: [
       'Brand Strategy & Identity',
       'User Interface (UI) Design',

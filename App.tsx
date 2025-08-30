@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
-import SplashScreen from './components/SplashScreen';
-import LandingPage from './components/LandingPage';
-import PortfolioDetail from './components/PortfolioDetail';
-import { PORTFOLIO_DATA } from './constants';
-import { Person } from './types';
+import SplashScreen from './components/SplashScreen.tsx';
+import LandingPage from './components/LandingPage.tsx';
+import PortfolioDetail from './components/PortfolioDetail.tsx';
+import ChatBot from './components/ChatBot.tsx';
+import { Person } from './types.ts';
 
 const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -46,6 +46,7 @@ const App: React.FC = () => {
           )}
         </AnimatePresence>
       </LayoutGroup>
+      {!isLoading && <ChatBot person={selectedPerson} />}
     </div>
   );
 };
